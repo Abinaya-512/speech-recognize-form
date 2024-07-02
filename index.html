@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User List</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>User List</h1>
+        <a href="{{ url_for('add_user') }}" class="button">Add User</a>
+        <ul>
+        {% for user in users %}
+            <li>
+                {{ user.name }} - {{ user.address }} - {{ user.gender }} - {{ user.company }} - {{ user.position }}
+                <a href="{{ url_for('update_user', id=user.id) }}" class="button">Edit</a>
+                <a href="{{ url_for('delete_user', id=user.id) }}" class="button">Delete</a>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Add User</h1>
+        <form action="{{ url_for('add_user') }}" method="post">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <div class="input-group">
+                    <input type="text" id="name" name="name" required>
+                    <button type="button" id="name-btn" onclick="toggleRecognition('name')">🎤</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Address:</label>
+                <div class="input-group">
+                    <input type="text" id="address" name="address" required>
+                    <button type="button" id="address-btn" onclick="toggleRecognition('address')">🎤</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="gender">Gender:</label>
+                <div class="input-group">
+                    <select id="gender" name="gender" required>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <button type="button" id="gender-btn" onclick="toggleRecognition('gender')">🎤</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="company">Company:</label>
+                <div class="input-group">
+                    <input type="text" id="company" name="company" required>
+                    <button type="button" id="company-btn" onclick="toggleRecognition('company')">🎤</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="position">Position:</label>
+                <div class="input-group">
+                    <input type="text" id="position" name="position" required>
+                    <button type="button" id="position-btn" onclick="toggleRecognition('position')">🎤</button>
+                </div>
+            </div>
+
+            <input type="submit" value="Submit">
+        </form>
+        <a href="{{ url_for('index') }}" class="button">Back</a>
+    </div>
+    <script>
+        let recognition;
+        let isRecognizing = false;
+
+        function toggleRecognition(field) {
+            const button = document.getElementById(`${field}-btn`);
+            
+            if (!isRecognizing) {
+                recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                recognition.lang = 'en-US';
+                recognition.start();
+                isRecognizing = true;
+                button.innerHTML = '🛑';
+
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    document.getElementById(field).value = transcript;
+                };
+
+                recognition.onerror = function(event) {
+                    console.error(event.error);
+                };
+
+                recognition.onend = function() {
+                    isRecognizing = false;
+                    button.innerHTML = '🎤';
+                };
+            } else {
+                recognition.stop();
+                isRecognizing = false;
+                button.innerHTML = '🎤';
+            }
+        }
+    </script>
+</body>
+</html>
